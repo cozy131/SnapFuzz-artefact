@@ -15,7 +15,7 @@
    1. cd examples
    2. run `./live555.sh`
    需要根据环境 修改一些变量
-7. fuzz in snapfuzz-artefact目录
+6. fuzz in snapfuzz-artefact目录
 
 ## IMPORTANT
 

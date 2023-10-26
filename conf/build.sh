@@ -34,7 +34,7 @@ cd "${BUILD_DIR}"
 BUILD_TARGETS=("afl-fuzz" "afl-fuzz-noaffin" "afl-fuzz-print" "afl-fuzz-noaffin-print" "afl-fuzz-noaffin-coredump" "afl-fuzz-long" "afl-fuzz-noaffin-long" "afl-fuzz-short" "afl-fuzz-noaffin-short")
 BUILD_FLAGS=("" "-DNOAFFIN_BENCH=1" "-DPRINT_BENCH=1" "-DNOAFFIN_BENCH=1 -DPRINT_BENCH=1" "-DNOAFFIN_BENCH=1 -DCORE_BENCH=1 -DLONG_BENCH=1" "-DLONG_BENCH=1" "-DNOAFFIN_BENCH=1 -DLONG_BENCH=1" "-DSHORT_BENCH=1" "-DNOAFFIN_BENCH=1 -DSHORT_BENCH=1")
 
-git clone https://github.com/andronat/aflnet.git --branch mymaster --single-branch aflnet
+git clone https://github.com/cozy131/aflnet.git --branch master aflnet
 cd aflnet
 
 IT=0
@@ -89,127 +89,131 @@ make -j
 cp ./sabre "${FINISH_DIR}/sabre"
 cp ./plugins/sbr-afl/libsbr-afl.so "${FINISH_DIR}/libsbr-afl-and-fs.so"
 
-#### Build LightFTP ####
+#### Build AFLGO ####
 cd "${BUILD_DIR}"
+git clone https://github.com/aflgo/aflgo.git aflgo
 
-git clone https://github.com/andronat/LightFTP fftp
-cd fftp
+#### Build LightFTP ####
+# cd "${BUILD_DIR}"
 
-git checkout snapfuzz_aflnet
-cd Source/Release
-make clean
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j all
-cp ./fftp "${FINISH_DIR}/fftp"
+# git clone https://github.com/andronat/LightFTP fftp
+# cd fftp
 
-make clean
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" CFLAGS="-fsanitize=address" make -j all
-cp ./fftp "${FINISH_DIR}/fftp-asan"
+# git checkout snapfuzz_aflnet
+# cd Source/Release
+# make clean
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j all
+# cp ./fftp "${FINISH_DIR}/fftp"
 
-make clean
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" CFLAGS="-fsanitize=thread" make -j all
-cp ./fftp "${FINISH_DIR}/fftp-tsan"
+# make clean
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" CFLAGS="-fsanitize=address" make -j all
+# cp ./fftp "${FINISH_DIR}/fftp-asan"
+
+# make clean
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" CFLAGS="-fsanitize=thread" make -j all
+# cp ./fftp "${FINISH_DIR}/fftp-tsan"
 
 # git checkout snapfuzz_aflnet_pthread
 # CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j clean all
 # cp ./fftp "${FINISH_DIR}/fftp-pthreadjoin"
 
 #### Build dnsmasq ####
-cd "${BUILD_DIR}"
+# cd "${BUILD_DIR}"
 
-git clone git://thekelleys.org.uk/dnsmasq.git dnsmasq
-cd dnsmasq
+# git clone git://thekelleys.org.uk/dnsmasq.git dnsmasq
+# cd dnsmasq
 
-git checkout v2.73rc6
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j
-cp ./src/dnsmasq "${FINISH_DIR}/dnsmasq"
+# git checkout v2.73rc6
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j
+# cp ./src/dnsmasq "${FINISH_DIR}/dnsmasq"
 
-make clean
+# make clean
 
-sed -i 's/CFLAGS        = -Wall -W -O2/CFLAGS= -fsanitize=address/' Makefile
-sed -i 's/LDFLAGS       =/LDFLAGS= -fsanitize=address/' Makefile
+# sed -i 's/CFLAGS        = -Wall -W -O2/CFLAGS= -fsanitize=address/' Makefile
+# sed -i 's/LDFLAGS       =/LDFLAGS= -fsanitize=address/' Makefile
 
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j
-cp ./src/dnsmasq "${FINISH_DIR}/dnsmasq-asan"
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" make -j
+# cp ./src/dnsmasq "${FINISH_DIR}/dnsmasq-asan"
 
-#### Build DICOM ####
-cd "${BUILD_DIR}"
+# #### Build DICOM ####
+# cd "${BUILD_DIR}"
 
-export PATH="${PATH}:${BUILD_DIR}/aflnet"
+# export PATH="${PATH}:${BUILD_DIR}/aflnet"
 
-git clone https://github.com/andronat/dcmtk --branch snapfuzz dcmtk
-cd dcmtk
+# git clone https://github.com/andronat/dcmtk --branch snapfuzz dcmtk
+# cd dcmtk
 
-mkdir build && cd build
-cmake ..
-make -j dcmqrscp
+# mkdir build && cd build
+# cmake ..
+# make -j dcmqrscp
 
-cp ./bin/dcmqrscp "${FINISH_DIR}/dcmqrscp"
+# cp ./bin/dcmqrscp "${FINISH_DIR}/dcmqrscp"
 
-cd "${BUILD_DIR}/dcmtk"
-git checkout snapfuzz_sanitizers
-cd build
-cmake ..
-make -j dcmqrscp
+# cd "${BUILD_DIR}/dcmtk"
+# git checkout snapfuzz_sanitizers
+# cd build
+# cmake ..
+# make -j dcmqrscp
 
-cp ./bin/dcmqrscp "${FINISH_DIR}/dcmqrscp-asan"
+# cp ./bin/dcmqrscp "${FINISH_DIR}/dcmqrscp-asan"
 
-#### Build live555 ####
-cd "${BUILD_DIR}"
+# #### Build live555 ####
+# cd "${BUILD_DIR}"
 
-export PATH="${PATH}:${BUILD_DIR}/aflnet"
-export AFL_PATH="${BUILD_DIR}/aflnet"
+# export PATH="${PATH}:${BUILD_DIR}/aflnet"
+# export AFL_PATH="${BUILD_DIR}/aflnet"
 
-git clone https://github.com/andronat/live555.git --branch snapfuzz live555
-cd live555
+# git clone https://github.com/andronat/live555.git --branch snapfuzz live555
+# cd live555
 
-./genMakefiles linux
-make -j clean all
+# ./genMakefiles linux
+# make -j clean all
 
-cp ./testProgs/testOnDemandRTSPServer "${FINISH_DIR}/testOnDemandRTSPServer"
-cp "${BUILD_DIR}/aflnet/tutorials/live555/sample_media_sources"/* "${FINISH_DIR}/"
+# cp ./testProgs/testOnDemandRTSPServer "${FINISH_DIR}/testOnDemandRTSPServer"
+# cp "${BUILD_DIR}/aflnet/tutorials/live555/sample_media_sources"/* "${FINISH_DIR}/"
 
-cp "${BUILD_DIR}/aflnet/tutorials/live555/rtsp.dict" "${FINISH_DIR}/conf"
-cp -r "${BUILD_DIR}/aflnet/tutorials/live555/in-rtsp" "${FINISH_DIR}/conf"
+# cp "${BUILD_DIR}/aflnet/tutorials/live555/rtsp.dict" "${FINISH_DIR}/conf"
+# cp -r "${BUILD_DIR}/aflnet/tutorials/live555/in-rtsp" "${FINISH_DIR}/conf"
 
-make clean
+# make clean
 
-git checkout snapfuzz_asan
-./genMakefiles linux
-make -j clean all
+# git checkout snapfuzz_asan
+# ./genMakefiles linux
+# make -j clean all
 
-cp ./testProgs/testOnDemandRTSPServer "${FINISH_DIR}/testOnDemandRTSPServer-asan"
+# cp ./testProgs/testOnDemandRTSPServer "${FINISH_DIR}/testOnDemandRTSPServer-asan"
 
-#### Build TinyDTLS ####
-cd "${BUILD_DIR}"
+# #### Build TinyDTLS ####
+# cd "${BUILD_DIR}"
 
-git clone https://github.com/andronat/tinydtls-fuzz.git tinydtls
-cd tinydtls
-git checkout 06995d4
-cd tests
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" make clean all
+# git clone https://github.com/andronat/tinydtls-fuzz.git tinydtls
+# cd tinydtls
+# git checkout 06995d4
+# cd tests
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" make clean all
 
-cp "dtls-server" "${FINISH_DIR}/dtls-server"
+# cp "dtls-server" "${FINISH_DIR}/dtls-server"
 
-cp -r "${BUILD_DIR}/aflnet/tutorials/tinydtls/handshake_captures" "${FINISH_DIR}/conf/in-dtls"
+# cp -r "${BUILD_DIR}/aflnet/tutorials/tinydtls/handshake_captures" "${FINISH_DIR}/conf/in-dtls"
 
-cd "${BUILD_DIR}/tinydtls"
-git checkout snapfuzz_asan
+# cd "${BUILD_DIR}/tinydtls"
+# git checkout snapfuzz_asan
 
-make clean
-cd tests
-make clean
-CC="${BUILD_DIR}/aflnet/afl-clang-fast" make all
+# make clean
+# cd tests
+# make clean
+# CC="${BUILD_DIR}/aflnet/afl-clang-fast" make all
 
-cp "dtls-server" "${FINISH_DIR}/dtls-server-asan"
+# cp "dtls-server" "${FINISH_DIR}/dtls-server-asan"
 
-# # #### Build Pthsem ####
+# # # #### Build Pthsem ####
 
-# # git clone https://github.com/linknx/pthsem
-# # cd pthsem
+# # # git clone https://github.com/linknx/pthsem
+# # # cd pthsem
 
-# # ./configure --enable-pthread
-# # make
+# # # ./configure --enable-pthread
+# # # make
 
-# # cp ".libs/libpthread.so.20.0.28" "${FINISH_DIR}/lib2pthread.so"
+# # # cp ".libs/libpthread.so.20.0.28" "${FINISH_DIR}/lib2pthread.so"
 
-echo "Done!"
+# echo "Done!"

@@ -1,3 +1,10 @@
+# 改动
+## ./conf/build
+1. aflnet aflgo链接改动
+2. 运行该脚本，只是build aflnet snapfuzz;git clone aflgo
+## cd builds/aflgo
+
+
 # SnapFuzz Artefact
 
 ## IMPORTANT

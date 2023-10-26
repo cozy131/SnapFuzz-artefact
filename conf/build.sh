@@ -91,7 +91,7 @@ cp ./plugins/sbr-afl/libsbr-afl.so "${FINISH_DIR}/libsbr-afl-and-fs.so"
 
 #### Build AFLGO ####
 cd "${BUILD_DIR}"
-git clone https://github.com/aflgo/aflgo.git aflgo
+git clone https://github.com/cozy131/aflgo.git aflgo
 
 #### Build LightFTP ####
 # cd "${BUILD_DIR}"

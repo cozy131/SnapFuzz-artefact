@@ -2,10 +2,20 @@
 ## ./conf/build
 1. aflnet aflgo链接改动
 2. 运行该脚本，只是build aflnet snapfuzz;git clone aflgo
-## cd builds/aflgo
 
 
-# SnapFuzz Artefact
+# for aflgo-snapfuzz
+1. run `./conf/config.sh`
+2. run `./conf/build.sh`
+3. cd builds/aflgo
+4. run `sudo ./build.sh` 
+若已有环境，可以注释掉前文，只运行最后`Build AFLGo components`
+该aflgo版本没有afl-2.57b
+5. for live555
+   5.1 cd examples
+   5.2 run `./live555.sh`
+   需要根据环境 修改一些变量
+6. fuzz in snapfuzz-artefact目录
 
 ## IMPORTANT
 

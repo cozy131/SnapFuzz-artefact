@@ -10,7 +10,6 @@
 3. cd builds/aflgo
 4. run `sudo ./build.sh` 
 若已有环境，可以注释掉前文，只运行最后`Build AFLGo components`
-该aflgo版本没有afl-2.57b
 5. for live555
    1. cd examples
    2. run `./live555.sh`
